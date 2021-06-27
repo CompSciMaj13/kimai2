@@ -4,10 +4,10 @@ services:
   sqldb:
     image: mysql:5.7
     environment:
-      - MYSQL_DATABASE=kimai
-      - MYSQL_USER=kimaiuser
-      - MYSQL_PASSWORD=kimaipassword
-      - MYSQL_ROOT_PASSWORD=changemeplease
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
     volumes:
       - mysql:/var/lib/mysql
     command: --default-storage-engine innodb
@@ -38,10 +38,10 @@ services:
   kimai: # This is the latest FPM image of kimai
     image: kimai/kimai2:fpm
     environment:
-      - ADMINMAIL=admin@kimai.local
-      - ADMINPASS=changemeplease
-      - DATABASE_URL=mysql://kimaiuser:kimaipassword@sqldb/kimai
-      - TRUSTED_HOSTS=nginx,localhost,127.0.0.1
+      - ADMINMAIL=${ADMAINMAIL}
+      - ADMINPASS=${ADMINPASS}
+      - DATABASE_URL=mysql://${MYSQL_USER}:${MYSQL_PASSWORD}@sqldb/${MYSQL_DATABASE}
+      - TRUSTED_HOSTS=${TRUSTED_HOSTS}
     volumes:
       - public:/opt/kimai/public
       # - var:/opt/kimai/var
@@ -52,7 +52,7 @@ services:
   postfix:
     image: catatnight/postfix:latest
     environment:
-      maildomain: neontribe.co.uk
+      #maildomain: neontribe.co.uk
       smtp_user: kimai:kimai
     restart: unless-stopped
 
